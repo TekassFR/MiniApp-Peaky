@@ -1,0 +1,67 @@
+{
+  "restaurant": {
+    "name": "Restaurant Menu",
+    "description": "Mini-App Telegram pour commandes en ligne",
+    "currency": "€",
+    "delivery_fee": 2.50,
+    "min_order": 15.00
+  },
+  "admin": {
+    "telegram_username": "peakyblinders540",
+    "channel_link": "https://t.me/+1ucagzAd9_YxZDE0",
+    "whitelist": ["peakyblinders540"]
+  },
+  "categories": {
+    "pizza": {
+      "name": "Hash",
+      "emoji": "🍫",
+      "description": "Nos produits en Hash"
+    },
+    "pasta": {
+      "name": "Weed",
+      "emoji": "🌿",
+      "description": "Nos produits en Weed"
+    }
+  },
+  "products": {
+    "pizza": [
+      {
+          "id": 3,
+          "name": "Frozen Sour Tsunami",
+          "description": "Frozen de très bonne qualité, je te laisse faire ton propre avis.",
+          "price": 10.00,
+          "emoji": "🍫",
+          "image": "https://imgur.com/947df54f-0be9-4aca-831e-040089fb46cb",
+          "category": "pizza",
+          "isNew": true,
+          "isPromo": false,
+          "video": "https://i.imgur.com/L4hl2bp.mp4",
+          "customPrices": {
+            "5": 50.00,
+            "10": 100.00,
+            "50": 350.00
+          }
+          }
+    ],
+    "pasta": [
+      {
+        "id": 5,
+        "name": "Cali USA Cherry Runtz",
+        "description": "Cali USA Cherry Runtz est un hybride américain qui conquiert l'Europe.",
+        "price": 15.00,
+        "emoji": "🌿",
+        "image": "https://imgur.com/9d765716-704b-48d5-9df9-4c615c55496f",
+        "category": "pasta",
+        "isNew": true,
+        "isPromo": false,
+        "video": "https://i.imgur.com/YTiElWE.mp4",
+        "customPrices": {
+          "2": 30.00,
+          "5": 60.00,
+          "10": 120.00,
+          "50": 450.00
+        }
+      }
+    ]
+  }
+}
