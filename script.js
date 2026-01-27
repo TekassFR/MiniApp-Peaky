@@ -2628,4 +2628,3 @@ async function saveConfig() {
         showNotification('Erreur lors de la sauvegarde: ' + error.message);
     }
 }
-
