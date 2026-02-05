@@ -218,6 +218,7 @@ async function loadConfig() {
 let cart = [];
 let currentCategory = 'all';
 let currentOrderType = 'delivery'; // Variable pour tracker le type de service sélectionné
+let productDetailService = 'delivery'; // Variable pour tracker le service sélectionné sur la page de détail du produit
 
 // Variables pour les éléments DOM (seront initialisées après le chargement)
 let userInfo, menuGrid, cartSummary, cartItems, cartTotal, checkoutBtn;
@@ -496,6 +497,84 @@ function getPriceForService(item, quantity, serviceType = 'delivery') {
     return basePrice * window.SecurityUtils.validateQuantity(quantity);
 }
 
+// Fonction pour changer le service (delivery/pickup) sur la page de détail du produit
+function changeProductService(service) {
+    if (service !== 'delivery' && service !== 'pickup') return;
+    
+    productDetailService = service;
+    
+    // Mettre à jour les boutons actifs
+    const deliveryBtn = document.getElementById('service-delivery-btn');
+    const pickupBtn = document.getElementById('service-pickup-btn');
+    
+    if (deliveryBtn && pickupBtn) {
+        if (service === 'delivery') {
+            deliveryBtn.classList.add('service-btn-active');
+            pickupBtn.classList.remove('service-btn-active');
+        } else {
+            pickupBtn.classList.add('service-btn-active');
+            deliveryBtn.classList.remove('service-btn-active');
+        }
+    }
+    
+    // Regenerate les bulles avec les nouveaux prix
+    const product = Object.values(menuData).flat().find(p => p.id === currentProductId);
+    if (product) {
+        regenerateProductBubbles(product);
+    }
+}
+
+// Fonction pour regenerate les bulles de quantité avec le bon service
+function regenerateProductBubbles(product) {
+    const quantityBubblesContainer = document.querySelector('.quantity-bubbles');
+    if (!quantityBubblesContainer || !product.customPrices) return;
+    
+    // Vider le conteneur
+    quantityBubblesContainer.innerHTML = '';
+    
+    // Obtenir les quantités disponibles depuis customPrices
+    const entries = Object.entries(product.customPrices)
+        .map(([key, val]) => {
+            const qty = parseFloat(String(key).replace(',', '.'));
+            
+            // Gérer à la fois les prix simples et les prix différenciés
+            if (typeof val === 'object' && val.delivery !== undefined && val.pickup !== undefined) {
+                // Prix différencié delivery/pickup
+                return { qty, priceDelivery: parseFloat(val.delivery), pricePickup: parseFloat(val.pickup), isDifferentiated: true };
+            } else {
+                // Prix simple
+                const price = parseFloat(val);
+                return { qty, price, isDifferentiated: false };
+            }
+        })
+        .filter(e => e.qty > 0 && Number.isFinite(e.qty))
+        .sort((a, b) => a.qty - b.qty);
+    
+    entries.forEach(({ qty, price, priceDelivery, pricePickup, isDifferentiated }) => {
+        const bubbleDiv = document.createElement('div');
+        bubbleDiv.className = 'quantity-bubble';
+        bubbleDiv.setAttribute('data-qty', qty);
+        bubbleDiv.onclick = () => addToCartWithQuantity(currentProductId, qty);
+        
+        if (isDifferentiated) {
+            // Afficher le prix correspondant au service sélectionné
+            const displayPrice = productDetailService === 'pickup' ? pricePickup : priceDelivery;
+            const serviceEmoji = productDetailService === 'pickup' ? '🏪' : '📦';
+            bubbleDiv.innerHTML = `
+                <span class="bubble-qty">${qty}g</span>
+                <span class="bubble-price">${serviceEmoji} ${displayPrice.toFixed(2)}€</span>
+            `;
+        } else {
+            // Afficher un seul prix pour les autres produits
+            bubbleDiv.innerHTML = `
+                <span class="bubble-qty">${qty}g</span>
+                <span class="bubble-price">${price.toFixed(2)}€</span>
+            `;
+        }
+        quantityBubblesContainer.appendChild(bubbleDiv);
+    });
+}
+
 // Fonction pour ouvrir la page de détail produit
 function openProductDetail(productId) {
     if (!window.SecurityUtils.checkRateLimit()) {
@@ -537,72 +616,41 @@ function openProductDetail(productId) {
     // Générer dynamiquement les boutons de quantité basés sur customPrices
     const quantityBubblesContainer = document.querySelector('.quantity-bubbles');
     if (quantityBubblesContainer && product.customPrices) {
-        // Vider le conteneur existant
-        quantityBubblesContainer.innerHTML = '';
+        // Vérifier si le produit a des prix différenciés (delivery/pickup)
+        const hasDifferentiatedPrices = Object.values(product.customPrices).some(price => 
+            typeof price === 'object' && price.delivery !== undefined && price.pickup !== undefined
+        );
         
-        // Obtenir les quantités disponibles depuis customPrices
-        const entries = Object.entries(product.customPrices)
-            .map(([key, val]) => {
-                const qty = parseFloat(String(key).replace(',', '.'));
-                
-                // Gérer à la fois les prix simples et les prix différenciés
-                if (typeof val === 'object' && val.delivery !== undefined && val.pickup !== undefined) {
-                    // Prix différencié delivery/pickup
-                    return { qty, priceDelivery: parseFloat(val.delivery), pricePickup: parseFloat(val.pickup), isDifferentiated: true };
-                } else {
-                    // Prix simple
-                    const price = parseFloat(val);
-                    return { qty, price, isDifferentiated: false };
+        // Afficher le sélecteur de service seulement si le produit a des prix différenciés
+        const serviceSelector = document.getElementById('service-selector');
+        if (serviceSelector) {
+            if (hasDifferentiatedPrices) {
+                serviceSelector.style.display = 'block';
+                // Réinitialiser à delivery par défaut
+                productDetailService = 'delivery';
+                const deliveryBtn = document.getElementById('service-delivery-btn');
+                const pickupBtn = document.getElementById('service-pickup-btn');
+                if (deliveryBtn && pickupBtn) {
+                    deliveryBtn.classList.add('service-btn-active');
+                    pickupBtn.classList.remove('service-btn-active');
                 }
-            })
-            .filter(e => e.qty > 0 && Number.isFinite(e.qty))
-            .sort((a, b) => a.qty - b.qty);
-        
-        entries.forEach(({ qty, price, priceDelivery, pricePickup, isDifferentiated }) => {
-            const bubbleDiv = document.createElement('div');
-            bubbleDiv.className = 'quantity-bubble';
-            bubbleDiv.setAttribute('data-qty', qty);
-            bubbleDiv.onclick = () => addToCartWithQuantity(currentProductId, qty);
-            
-            if (isDifferentiated) {
-                // Afficher les deux prix pour les produits différenciés
-                bubbleDiv.innerHTML = `
-                    <span class="bubble-qty">${qty}g</span>
-                    <div class="bubble-prices">
-                        <span class="bubble-price-delivery">📦 ${priceDelivery.toFixed(2)}€</span>
-                        <span class="bubble-price-pickup">🏪 ${pricePickup.toFixed(2)}€</span>
-                    </div>
-                `;
             } else {
-                // Afficher un seul prix pour les autres produits
-                bubbleDiv.innerHTML = `
-                    <span class="bubble-qty">${qty}g</span>
-                    <span class="bubble-price">${price.toFixed(2)}€</span>
-                `;
+                serviceSelector.style.display = 'none';
             }
-            quantityBubblesContainer.appendChild(bubbleDiv);
-        });
+        }
+        
+        // Générer les bulles avec la nouvelle fonction
+        regenerateProductBubbles(product);
     } else {
-        // Fallback vers le système par défaut si pas de customPrices
-        const quantities = [1, 2, 5, 10, 25, 50, 100];
-        quantities.forEach(qty => {
-            const priceElement = document.getElementById(`price-${qty}`);
-            if (priceElement) {
-                let totalPrice;
-                if (product.customPrices && product.customPrices[qty]) {
-                    const priceData = product.customPrices[qty];
-                    // Afficher seulement le prix delivery par défaut dans le fallback
-                    if (typeof priceData === 'object' && priceData.delivery !== undefined) {
-                        totalPrice = priceData.delivery.toFixed(2);
-                    } else {
-                        totalPrice = parseFloat(priceData).toFixed(2);
-                    }
-                } else {
-                    totalPrice = (safePrice * qty).toFixed(2);
-                }
-                priceElement.textContent = `${totalPrice}€`;
-            }
-        });
+        // Fallback vers l'affichage simple si pas de customPrices
+        const serviceSelector = document.getElementById('service-selector');
+        if (serviceSelector) {
+            serviceSelector.style.display = 'none';
+        }
+        
+        if (quantityBubblesContainer) {
+            quantityBubblesContainer.innerHTML = '';
+        }
     }
     
     // Gérer l'image
