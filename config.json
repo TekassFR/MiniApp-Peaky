@@ -61,6 +61,24 @@
           "10": 120.00,
           "50": 450.00
         }
+      },
+      {
+        "id": 6,
+        "name": "Cali USA Garry Payton",
+        "description": "Cali USA Garry Payton, une variété premium de Californie avec une puissance exceptionnelle.",
+        "price": 10.00,
+        "emoji": "🌿",
+        "image": "https://i.imgur.com/iymqQgY.jpeg",
+        "category": "pasta",
+        "isNew": true,
+        "isPromo": false,
+        "video": "https://i.imgur.com/ePIAER7.mp4",
+        "customPrices": {
+          "5": 60.00,
+          "10": 120.00,
+          "5 PF": 50.00,
+          "10 PF": 100.00
+        }
       }
     ]
   }
