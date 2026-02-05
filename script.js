@@ -479,13 +479,16 @@ let currentProductId = null;
 function getPriceForService(item, quantity, serviceType = 'delivery') {
     const safeQty = String(window.SecurityUtils.validateQuantity(quantity)).replace(',', '.');
     
+    // Utiliser le service enregistré avec le produit si disponible, sinon le serviceType passé en paramètre
+    const serviceToUse = item.selectedService || serviceType;
+    
     if (item.customPrices && item.customPrices[safeQty]) {
         const priceData = item.customPrices[safeQty];
         
         // Si le prix est un objet avec delivery/pickup (seulement pour certains produits)
         if (typeof priceData === 'object' && priceData.delivery !== undefined && priceData.pickup !== undefined) {
             // C'est un prix différencié delivery/pickup
-            return serviceType === 'pickup' ? priceData.pickup : priceData.delivery;
+            return serviceToUse === 'pickup' ? priceData.pickup : priceData.delivery;
         }
         
         // Sinon, c'est un prix simple (ancien format)
@@ -828,8 +831,23 @@ function addToCartWithQuantity(productId, quantity) {
     if (existingItem) {
         // Ajouter la quantité
         existingItem.quantity = existingItem.quantity + validQuantity;
+        // Mettre à jour le service aussi si le produit a des prix différenciés
+        const hasDifferentiatedPrices = Object.values(product.customPrices || {}).some(price => 
+            typeof price === 'object' && price.delivery !== undefined && price.pickup !== undefined
+        );
+        if (hasDifferentiatedPrices) {
+            existingItem.selectedService = productDetailService;
+        }
     } else {
-        cart.push({ ...product, quantity: validQuantity });
+        const newItem = { ...product, quantity: validQuantity };
+        // Enregistrer le service sélectionné pour les produits avec prix différenciés
+        const hasDifferentiatedPrices = Object.values(product.customPrices || {}).some(price => 
+            typeof price === 'object' && price.delivery !== undefined && price.pickup !== undefined
+        );
+        if (hasDifferentiatedPrices) {
+            newItem.selectedService = productDetailService;
+        }
+        cart.push(newItem);
     }
     
     // Mettre à jour l'affichage du panier
@@ -1369,6 +1387,15 @@ function showOrderTypeModal() {
             cleanup();
             modal.style.display = 'none';
             currentOrderType = 'pickup'; // Mettre à jour le type de service sélectionné
+            // Synchroniser le service pour tous les items du panier avec prix différenciés
+            cart.forEach(item => {
+                const hasDifferentiatedPrices = Object.values(item.customPrices || {}).some(price => 
+                    typeof price === 'object' && price.delivery !== undefined && price.pickup !== undefined
+                );
+                if (hasDifferentiatedPrices) {
+                    item.selectedService = 'pickup';
+                }
+            });
             updateCartDisplay(); // Rafraîchir l'affichage du panier avec les nouveaux prix
             window.SecurityUtils.securityLog('order_type_selected', { type: 'pickup' });
             resolve('pickup');
@@ -1379,6 +1406,15 @@ function showOrderTypeModal() {
             cleanup();
             modal.style.display = 'none';
             currentOrderType = 'delivery'; // Mettre à jour le type de service sélectionné
+            // Synchroniser le service pour tous les items du panier avec prix différenciés
+            cart.forEach(item => {
+                const hasDifferentiatedPrices = Object.values(item.customPrices || {}).some(price => 
+                    typeof price === 'object' && price.delivery !== undefined && price.pickup !== undefined
+                );
+                if (hasDifferentiatedPrices) {
+                    item.selectedService = 'delivery';
+                }
+            });
             updateCartDisplay(); // Rafraîchir l'affichage du panier avec les nouveaux prix
             window.SecurityUtils.securityLog('order_type_selected', { type: 'delivery' });
             resolve('delivery');
