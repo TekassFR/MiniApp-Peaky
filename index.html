@@ -14,7 +14,7 @@
                 <div class="banner-background"></div>
                 <div class="banner-content">
                     <div class="logo-section">
-                        <div class="logo-icon"><img src="https://i.ibb.co/YBXMQTVz/43ea13ee-30ff-42d1-baa6-ba39287863fd.jpg" alt="Logo" class="logo-img" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/56x56.png?text=Logo'" /></div>
+                        <div class="logo-icon"><img src="https://i.ibb.co/7JnxH5L8/erasebg-transformed-6-1.png" alt="Logo" class="logo-img" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/56x56.png?text=Logo'" /></div>
                         <h1 class="brand-name">CHEZ PEAKY</h1>
                         <div class="brand-tagline">Notre Menus 2026</div>
                     </div>
@@ -66,37 +66,22 @@
                         <h2 id="detail-product-name"></h2>
                         <p id="detail-product-description"></p>
                         <div class="detail-price-section">
+                            <!-- Sélecteur de service (delivery/pickup) pour Cali USA Garry Payton -->
+                            <div id="service-selector" class="service-selector" style="display: none;">
+                                <h4>Choisissez votre service :</h4>
+                                <div class="service-buttons">
+                                    <button id="service-delivery-btn" class="service-btn service-btn-active" onclick="changeProductService('delivery')">
+                                        📦 Livraison
+                                    </button>
+                                    <button id="service-pickup-btn" class="service-btn" onclick="changeProductService('pickup')">
+                                        🏪 Sur place
+                                    </button>
+                                </div>
+                            </div>
                             <div class="quantity-selector">
                                 <h4>Choisissez votre quantité :</h4>
                                 <div class="quantity-bubbles">
-                                    <div class="quantity-bubble" data-qty="1" onclick="addToCartWithQuantity(currentProductId, 1)">
-                                        <span class="bubble-qty">1g</span>
-                                        <span class="bubble-price" id="price-1"></span>
-                                    </div>
-                                    <div class="quantity-bubble" data-qty="2" onclick="addToCartWithQuantity(currentProductId, 2)">
-                                        <span class="bubble-qty">2g</span>
-                                        <span class="bubble-price" id="price-2"></span>
-                                    </div>
-                                    <div class="quantity-bubble" data-qty="5" onclick="addToCartWithQuantity(currentProductId, 5)">
-                                        <span class="bubble-qty">5g</span>
-                                        <span class="bubble-price" id="price-5"></span>
-                                    </div>
-                                    <div class="quantity-bubble" data-qty="10" onclick="addToCartWithQuantity(currentProductId, 10)">
-                                        <span class="bubble-qty">10g</span>
-                                        <span class="bubble-price" id="price-10"></span>
-                                    </div>
-                                    <div class="quantity-bubble" data-qty="25" onclick="addToCartWithQuantity(currentProductId, 25)">
-                                        <span class="bubble-qty">25g</span>
-                                        <span class="bubble-price" id="price-25"></span>
-                                    </div>
-                                    <div class="quantity-bubble" data-qty="50" onclick="addToCartWithQuantity(currentProductId, 50)">
-                                        <span class="bubble-qty">50g</span>
-                                        <span class="bubble-price" id="price-50"></span>
-                                    </div>
-                                    <div class="quantity-bubble" data-qty="100" onclick="addToCartWithQuantity(currentProductId, 100)">
-                                        <span class="bubble-qty">100g</span>
-                                        <span class="bubble-price" id="price-100"></span>
-                                    </div>
+                                    <!-- Les bulles seront générées dynamiquement par JavaScript -->
                                 </div>
                             </div>
                         </div>
