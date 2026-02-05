@@ -74,10 +74,14 @@
         "isPromo": false,
         "video": "https://i.imgur.com/ePIAER7.mp4",
         "customPrices": {
-          "5": 60.00,
-          "10": 120.00,
-          "5 PF": 50.00,
-          "10 PF": 100.00
+          "5": {
+            "delivery": 60.00,
+            "pickup": 50.00
+          },
+          "10": {
+            "delivery": 120.00,
+            "pickup": 100.00
+          }
         }
       }
     ]
