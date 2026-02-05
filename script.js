@@ -217,6 +217,7 @@ async function loadConfig() {
 // État du panier
 let cart = [];
 let currentCategory = 'all';
+let currentOrderType = 'delivery'; // Variable pour tracker le type de service sélectionné
 
 // Variables pour les éléments DOM (seront initialisées après le chargement)
 let userInfo, menuGrid, cartSummary, cartItems, cartTotal, checkoutBtn;
@@ -473,6 +474,28 @@ function filterByCategory(category) {
 // Variable globale pour stocker l'ID du produit actuel
 let currentProductId = null;
 
+// Fonction helper pour obtenir le prix correct selon le service sélectionné
+function getPriceForService(item, quantity, serviceType = 'delivery') {
+    const safeQty = String(window.SecurityUtils.validateQuantity(quantity)).replace(',', '.');
+    
+    if (item.customPrices && item.customPrices[safeQty]) {
+        const priceData = item.customPrices[safeQty];
+        
+        // Si le prix est un objet avec delivery/pickup (seulement pour certains produits)
+        if (typeof priceData === 'object' && priceData.delivery !== undefined && priceData.pickup !== undefined) {
+            // C'est un prix différencié delivery/pickup
+            return serviceType === 'pickup' ? priceData.pickup : priceData.delivery;
+        }
+        
+        // Sinon, c'est un prix simple (ancien format)
+        return priceData;
+    }
+    
+    // Fallback: calculer avec le prix de base
+    const basePrice = parseFloat(item.price) || 0;
+    return basePrice * window.SecurityUtils.validateQuantity(quantity);
+}
+
 // Fonction pour ouvrir la page de détail produit
 function openProductDetail(productId) {
     if (!window.SecurityUtils.checkRateLimit()) {
@@ -521,19 +544,42 @@ function openProductDetail(productId) {
         const entries = Object.entries(product.customPrices)
             .map(([key, val]) => {
                 const qty = parseFloat(String(key).replace(',', '.'));
-                return { qty, price: parseFloat(val) };
+                
+                // Gérer à la fois les prix simples et les prix différenciés
+                if (typeof val === 'object' && val.delivery !== undefined && val.pickup !== undefined) {
+                    // Prix différencié delivery/pickup
+                    return { qty, priceDelivery: parseFloat(val.delivery), pricePickup: parseFloat(val.pickup), isDifferentiated: true };
+                } else {
+                    // Prix simple
+                    const price = parseFloat(val);
+                    return { qty, price, isDifferentiated: false };
+                }
             })
-            .filter(e => e.qty > 0 && Number.isFinite(e.qty) && Number.isFinite(e.price))
+            .filter(e => e.qty > 0 && Number.isFinite(e.qty))
             .sort((a, b) => a.qty - b.qty);
-        entries.forEach(({ qty, price }) => {
+        
+        entries.forEach(({ qty, price, priceDelivery, pricePickup, isDifferentiated }) => {
             const bubbleDiv = document.createElement('div');
             bubbleDiv.className = 'quantity-bubble';
             bubbleDiv.setAttribute('data-qty', qty);
             bubbleDiv.onclick = () => addToCartWithQuantity(currentProductId, qty);
-            bubbleDiv.innerHTML = `
-                <span class="bubble-qty">${qty}g</span>
-                <span class="bubble-price">${price.toFixed(2)}€</span>
-            `;
+            
+            if (isDifferentiated) {
+                // Afficher les deux prix pour les produits différenciés
+                bubbleDiv.innerHTML = `
+                    <span class="bubble-qty">${qty}g</span>
+                    <div class="bubble-prices">
+                        <span class="bubble-price-delivery">📦 ${priceDelivery.toFixed(2)}€</span>
+                        <span class="bubble-price-pickup">🏪 ${pricePickup.toFixed(2)}€</span>
+                    </div>
+                `;
+            } else {
+                // Afficher un seul prix pour les autres produits
+                bubbleDiv.innerHTML = `
+                    <span class="bubble-qty">${qty}g</span>
+                    <span class="bubble-price">${price.toFixed(2)}€</span>
+                `;
+            }
             quantityBubblesContainer.appendChild(bubbleDiv);
         });
     } else {
@@ -544,7 +590,13 @@ function openProductDetail(productId) {
             if (priceElement) {
                 let totalPrice;
                 if (product.customPrices && product.customPrices[qty]) {
-                    totalPrice = product.customPrices[qty].toFixed(2);
+                    const priceData = product.customPrices[qty];
+                    // Afficher seulement le prix delivery par défaut dans le fallback
+                    if (typeof priceData === 'object' && priceData.delivery !== undefined) {
+                        totalPrice = priceData.delivery.toFixed(2);
+                    } else {
+                        totalPrice = parseFloat(priceData).toFixed(2);
+                    }
                 } else {
                     totalPrice = (safePrice * qty).toFixed(2);
                 }
@@ -875,22 +927,12 @@ function updateCartDisplay() {
             return;
         }
         
-        // Utiliser le prix personnalisé si disponible, sinon calculer avec le prix de base
-        let itemTotal;
-        if (item.customPrices && item.customPrices[safeQuantity]) {
-            itemTotal = item.customPrices[safeQuantity];
-        } else {
-            itemTotal = safePrice * safeQuantity;
-        }
+        // Utiliser la fonction helper pour obtenir le prix correct selon le service
+        let itemTotal = getPriceForService(item, safeQuantity, currentOrderType);
         total += itemTotal;
         
         // Calculer le prix unitaire effectif
-        let unitPrice;
-        if (item.customPrices && item.customPrices[safeQuantity]) {
-            unitPrice = item.customPrices[safeQuantity] / safeQuantity;
-        } else {
-            unitPrice = safePrice;
-        }
+        let unitPrice = itemTotal / safeQuantity;
         
         html += `
             <div class="cart-item">
@@ -1092,17 +1134,8 @@ function prepareOrderData(deliveryAddress, orderType = 'delivery', arrivalTime =
     }
     
     const total = cart.reduce((sum, item) => {
-        const safePrice = parseFloat(item.price) || 0;
-        const safeQty = window.SecurityUtils.validateQuantity(item.quantity);
-        
-        // Utiliser le prix personnalisé si disponible
-        let itemTotal;
-        if (item.customPrices && item.customPrices[safeQty]) {
-            itemTotal = item.customPrices[safeQty];
-        } else {
-            itemTotal = safePrice * safeQty;
-        }
-        
+        // Utiliser la fonction helper pour obtenir le prix correct selon le service
+        let itemTotal = getPriceForService(item, item.quantity, orderType);
         return sum + itemTotal;
     }, 0);
     
@@ -1115,13 +1148,8 @@ function prepareOrderData(deliveryAddress, orderType = 'delivery', arrivalTime =
             const safePrice = parseFloat(item.price) || 0;
             const safeQty = window.SecurityUtils.validateQuantity(item.quantity);
             
-            // Utiliser le prix personnalisé si disponible
-            let itemTotal;
-            if (item.customPrices && item.customPrices[safeQty]) {
-                itemTotal = item.customPrices[safeQty];
-            } else {
-                itemTotal = safePrice * safeQty;
-            }
+            // Utiliser la fonction helper pour obtenir le prix correct selon le service
+            let itemTotal = getPriceForService(item, safeQty, orderType);
             
             return {
                 name: window.SecurityUtils.sanitizeInput(item.name),
@@ -1292,6 +1320,8 @@ function showOrderTypeModal() {
         function handlePickup() {
             cleanup();
             modal.style.display = 'none';
+            currentOrderType = 'pickup'; // Mettre à jour le type de service sélectionné
+            updateCartDisplay(); // Rafraîchir l'affichage du panier avec les nouveaux prix
             window.SecurityUtils.securityLog('order_type_selected', { type: 'pickup' });
             resolve('pickup');
         }
@@ -1300,6 +1330,8 @@ function showOrderTypeModal() {
         function handleDelivery() {
             cleanup();
             modal.style.display = 'none';
+            currentOrderType = 'delivery'; // Mettre à jour le type de service sélectionné
+            updateCartDisplay(); // Rafraîchir l'affichage du panier avec les nouveaux prix
             window.SecurityUtils.securityLog('order_type_selected', { type: 'delivery' });
             resolve('delivery');
         }
