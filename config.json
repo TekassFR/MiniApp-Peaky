@@ -41,23 +41,6 @@
             "10": 100.00,
             "50": 300.00
           }
-      },
-      {
-          "id": 3,
-          "name": "Frozen Sour Tsunami",
-          "description": "Frozen de très bonne qualité, je te laisse faire ton propre avis.",
-          "price": 10.00,
-          "emoji": "🍫",
-          "image": "https://i.imgur.com/0v0Z6rv.jpeg",
-          "category": "pizza",
-          "isNew": true,
-          "isPromo": false,
-          "video": "https://i.imgur.com/L4hl2bp.mp4",
-          "customPrices": {
-            "5": 50.00,
-            "10": 100.00,
-            "50": 350.00
-          }
       }
     ],
     "pasta": [
