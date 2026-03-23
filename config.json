@@ -12,11 +12,6 @@
     "whitelist": ["peakyblinders540"]
   },
   "categories": {
-    "pizza": {
-      "name": "Hash",
-      "emoji": "🍫",
-      "description": "Nos produits en Hash"
-    },
     "pasta": {
       "name": "Weed",
       "emoji": "🌿",
@@ -24,99 +19,23 @@
     }
   },
   "products": {
-    "pizza": [
-      {
-        "id": 4,
-        "name": "Sushi Static",
-        "description": "Sushi Static est un produit de haute qualité, parfait pour les amateurs de saveurs uniques.",
-        "price": 10.00,
-        "emoji": "🍫",
-        "image": "https://i.imgur.com/h9UzIom.jpeg",
-        "category": "pizza",
-        "isNew": true,
-        "isPromo": false,
-        "video": "https://i.imgur.com/1Bl1BqO.mp4",
-          "customPrices": {
-            "5": 50.00,
-            "10": 100.00,
-            "50": 300.00
-          }
-      }
-    ],
     "pasta": [
       {
         "id": 8,
-        "name": "Hyper Space Cats",
-        "description": "La Hyper Space Cats est un extraordinaire cannabis une variété qui captive l'imagination avec son profil de saveur unique et ses effets puissants.",
+        "name": "Mendo Breath AAAA",
+        "description": "La Mendo Breath AAAA est un extraordinaire cannabis une variété qui captive l'imagination avec son profil de saveur unique et ses effets puissants.",
         "price": 10.00,
         "emoji": "🌿",
-        "image": "https://i.imgur.com/ahfRgbu.jpeg",
+        "image": "https://i.imgur.com/11eb4bab-22a5-4889-9417-12c7b1a6c22c.jpeg",
         "category": "pasta",
         "isNew": true,
         "isPromo": false,
-        "video": "https://i.imgur.com/BCbTf9t.mp4",
+        "video": "https://i.imgur.com/RjslS0s.mp4",
         "customPrices": {
             "5": 60.00,
             "10": 120.00,
-            "50": 450.00
+            "50": 400.00
           }
-      },
-      {
-        "id": 7,
-        "name": "Slush Mint Cake",
-        "description": "La Slush Mint Cake est une hybride américaine extrêmement puissante, dotée d'un profil terpénique intense et d'un taux de THC très élevé, compris entre 23-27% en moyenne.",
-        "price": 10.00,
-        "emoji": "🌿",
-        "image": "https://i.imgur.com/ksj2jRo.jpeg",
-        "category": "pasta",
-        "isNew": true,
-        "isPromo": false,
-        "video": "https://i.imgur.com/z5yirEn.mp4",
-        "customPrices": {
-            "5": 60.00,
-            "10": 120.00,
-            "50": 450.00
-          }
-      },
-      {
-        "id": 5,
-        "name": "Cali USA Cherry Runtz",
-        "description": "Cali USA Cherry Runtz est un hybride américain qui conquiert l'Europe.",
-        "price": 15.00,
-        "emoji": "🌿",
-        "image": "https://i.imgur.com/1Zdxkqk.jpeg",
-        "category": "pasta",
-        "isNew": true,
-        "isPromo": false,
-        "video": "https://i.imgur.com/YTiElWE.mp4",
-        "customPrices": {
-          "2": 30.00,
-          "5": 60.00,
-          "10": 120.00,
-          "50": 450.00
-        }
-      },
-      {
-        "id": 6,
-        "name": "Cali USA Garry Payton",
-        "description": "Cali USA Garry Payton, une variété premium de Californie avec une puissance exceptionnelle.",
-        "price": 10.00,
-        "emoji": "🌿",
-        "image": "https://i.imgur.com/iymqQgY.jpeg",
-        "category": "pasta",
-        "isNew": true,
-        "isPromo": false,
-        "video": "https://i.imgur.com/ePIAER7.mp4",
-        "customPrices": {
-          "5": {
-            "delivery": 60.00,
-            "pickup": 50.00
-          },
-          "10": {
-            "delivery": 120.00,
-            "pickup": 100.00
-          }
-        }
       }
     ]
   }
