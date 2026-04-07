@@ -20,6 +20,23 @@
   },
   "products": {
     "pasta": [
+            {
+        "id": 2,
+        "name": "Ice Moon Rock",
+        "description": "La Ice Moon Rock une variété premium avec une puissance exceptionnelle.",
+        "price": 10.00,
+        "emoji": "🌿",
+        "image": "https://i.imgur.com/k7xu0j9.png",
+        "category": "pasta",
+        "isNew": true,
+        "isPromo": false,
+        "video": "https://i.imgur.com/tzwMIsi.mp4",
+        "customPrices": {
+            "1": 30.00,
+            "5": 140.00,
+            "10": 250.00
+          }
+      },
       {
         "id": 1,
         "name": "Mendo Breath AAAA",
