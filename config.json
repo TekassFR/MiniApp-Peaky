@@ -21,37 +21,20 @@
   "products": {
     "pasta": [
             {
-        "id": 2,
-        "name": "Ice Moon Rock",
-        "description": "La Ice Moon Rock une variété premium avec une puissance exceptionnelle.",
-        "price": 10.00,
-        "emoji": "🌿",
-        "image": "https://i.imgur.com/k7xu0j9.png",
-        "category": "pasta",
-        "isNew": true,
-        "isPromo": false,
-        "video": "https://i.imgur.com/tzwMIsi.mp4",
-        "customPrices": {
-            "1": 30.00,
-            "5": 140.00,
-            "10": 250.00
-          }
-      },
-      {
         "id": 1,
-        "name": "Mendo Breath AAAA",
-        "description": "La Mendo Breath AAAA est un extraordinaire cannabis une variété qui captive l'imagination avec son profil de saveur unique et ses effets puissants.",
+        "name": "Super Lemon Haze",
+        "description": "Véritable icône au profil citronné explosif, la Super Lemon Haze.",
         "price": 10.00,
         "emoji": "🌿",
-        "image": "https://i.imgur.com/clhjz6V.png",
+        "image": "https://imgur.com/555190f0-ffb4-4180-910f-f3de6b7fcad5",
         "category": "pasta",
         "isNew": true,
         "isPromo": false,
-        "video": "https://i.imgur.com/RjslS0s.mp4",
+        "video": "https://i.imgur.com/WDWN5aR.mp4",
         "customPrices": {
-            "5": 60.00,
-            "10": 120.00,
-            "50": 400.00
+            "5": 50.00,
+            "10": 90.00,
+            "50": 300.00
           }
       }
     ]
