@@ -9,7 +9,9 @@
   "admin": {
     "telegram_username": "peakyblinders540",
     "channel_link": "https://t.me/+1ucagzAd9_YxZDE0",
-    "whitelist": ["peakyblinders540"]
+    "whitelist": [
+      "peakyblinders540"
+    ]
   },
   "categories": {
     "pasta": {
@@ -20,7 +22,7 @@
   },
   "products": {
     "pasta": [
-            {
+      {
         "id": 1,
         "name": "Super Lemon Haze",
         "description": "Véritable icône au profil citronné explosif, la Super Lemon Haze.",
@@ -32,12 +34,13 @@
         "isPromo": false,
         "video": "https://i.imgur.com/WDWN5aR.mp4",
         "customPrices": {
-            "5": 50.00,
-            "10": 90.00,
-            "50": 300.00
-          },
-          {
-        "id": 1,
+          "5": 50.00,
+          "10": 90.00,
+          "50": 300.00
+        }
+      },
+      {
+        "id": 2,
         "name": "USA Super Boof",
         "description": "Super Boof est une variété hybride équilibrée issue du croisement entre Black Cherry Punch et Tropicana Cookies.",
         "price": 10.00,
@@ -48,10 +51,10 @@
         "isPromo": false,
         "video": "https://i.imgur.com/I1gCxjp.mp4",
         "customPrices": {
-            "5": 60.00,
-            "10": 120.00,
-            "50": 400.00
-          }
+          "5": 60.00,
+          "10": 120.00,
+          "50": 400.00
+        }
       }
     ]
   }
