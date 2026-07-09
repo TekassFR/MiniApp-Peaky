@@ -35,6 +35,22 @@
             "5": 50.00,
             "10": 90.00,
             "50": 300.00
+          },
+          {
+        "id": 1,
+        "name": "USA Super Boof",
+        "description": "Super Boof est une variété hybride équilibrée issue du croisement entre Black Cherry Punch et Tropicana Cookies.",
+        "price": 10.00,
+        "emoji": "🌿",
+        "image": "https://i.imgur.com/vKrl6P0.png",
+        "category": "pasta",
+        "isNew": true,
+        "isPromo": false,
+        "video": "https://i.imgur.com/I1gCxjp.mp4",
+        "customPrices": {
+            "5": 60.00,
+            "10": 120.00,
+            "50": 400.00
           }
       }
     ]
