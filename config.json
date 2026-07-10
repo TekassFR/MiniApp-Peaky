@@ -40,6 +40,40 @@
         }
       },
       {
+        "id": 3,
+        "name": "USA Purple Punch",
+        "description": "La Purple Punch est une hybride qui mélange deux autres fleurs de chanvre : la Larry OG et la Grandaddy Purple.",
+        "price": 10.00,
+        "emoji": "🌿",
+        "image": "https://i.imgur.com/1JjvJnF.png",
+        "category": "pasta",
+        "isNew": true,
+        "isPromo": false,
+        "video": "https://i.imgur.com/sL9GyTN.mp4",
+        "customPrices": {
+          "5": 60.00,
+          "10": 120.00,
+          "50": 400.00
+        }
+      },
+      {
+        "id": 4,
+        "name": "USA Cherry Poppers",
+        "description": "Les fleurs disposent d'une structure sativa allongée avec des grappes de têtes denses recouvertes d'une épaisse couche de trichomes scintillants.",
+        "price": 10.00,
+        "emoji": "🌿",
+        "image": "https://i.imgur.com/3IIZsN9.png",
+        "category": "pasta",
+        "isNew": true,
+        "isPromo": false,
+        "video": "https://i.imgur.com/gTBr9h1.mp4",
+        "customPrices": {
+          "5": 60.00,
+          "10": 120.00,
+          "50": 400.00
+        }
+      },
+      {
         "id": 2,
         "name": "USA Super Boof",
         "description": "Super Boof est une variété hybride équilibrée issue du croisement entre Black Cherry Punch et Tropicana Cookies.",
